@@ -1,0 +1,1654 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Principal Component Analysis: PCA &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'PCA';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="JARINGAN SYARAF TIRUAN" href="jaringansaraf.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+  <li class="toctree-l1"><a class="reference internal" href="powerBI.html">CARA MENGUMPULKAN DATABASE MENGGUNAKAN MICROSOFT POWER BI</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="naive.html">MACHINE LEARNING BASICS: NAIVE BAYES CLASSIFICATION</a></li>
+          
+          
+          
+          
+          
+          
+          
+          <li class="toctree-l1"><a class="reference internal" href="Salinan%20Tugas%20UTS.html">TUGAS UTS : KLASIFIKASI KANKER PAYUDARA MENGGUNAKAN METODE NAIVE BAYES DAN KNN</a></li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+<li class="toctree-l1"><a class="reference internal" href="DT.html">DECISION TREE DATA WEATHER</a></li>
+<li class="toctree-l1"><a class="internal" href="jaringansaraf.html">JARINGAN SYARAF TIRUAN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="PCA.html">PRINCIPAL COMPONENT ANALYSIS: PCA</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/walid666-afk/Pendata/blob/main/PCA.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/walid666-afk/Pendata" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FPCA.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/PCA.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Principal Component Analysis: PCA</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Principal Component Analysis: PCA</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transform-the-data">Transform the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insert-x-2d-into-the-original-iris-dataframe">Insert X_2D into the original Iris DataFrame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-number-of-components">Change number of components</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-new-features-using-naive-bayes">Training new features using Naive Bayes</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="tex2jax_ignore mathjax_ignore section" id="principal-component-analysis-pca">
+<h1>Principal Component Analysis: PCA<a class="headerlink" href="#principal-component-analysis-pca" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple">
+<li><p>import seaborn as sns: Pernyataan ini mengimpor pustaka seaborn, yang merupakan pustaka yang dibangun di atas matplotlib untuk visualisasi data statistik. Seaborn menyediakan antarmuka yang lebih sederhana dan lebih kuat untuk menghasilkan grafik yang indah dan informatif.</p></li>
+<li><p>import pandas as pd: Pernyataan ini mengimpor pustaka pandas, yang merupakan pustaka populer untuk manipulasi dan analisis data. Pandas menyediakan struktur data tingkat tinggi, seperti DataFrame, yang memungkinkan Anda untuk dengan mudah memanipulasi, membersihkan, dan menganalisis data.</p></li>
+<li><p>from sklearn.model_selection import train_test_split: Pernyataan ini mengimpor fungsi train_test_split dari modul model_selection dalam pustaka scikit-learn. train_test_split adalah fungsi yang berguna untuk membagi dataset menjadi subset pelatihan dan subset pengujian secara acak. Ini sangat berguna dalam evaluasi dan validasi model.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/drive&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">cd</span> /content/drive/MyDrive/Pendata
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">KeyboardInterrupt</span>Traceback (most recent call last)
+<span class="nn">&lt;ipython-input-2-b30e20079f22&gt;</span> in <span class="ni">&lt;cell line: 2&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/drive&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;cd&#39;</span><span class="p">,</span> <span class="s1">&#39;/content/drive/MyDrive/Pendata&#39;</span><span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/drive.py</span> in <span class="ni">mount</span><span class="nt">(mountpoint, force_remount, timeout_ms, readonly)</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span> <span class="k">def</span> <span class="nf">mount</span><span class="p">(</span><span class="n">mountpoint</span><span class="p">,</span> <span class="n">force_remount</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout_ms</span><span class="o">=</span><span class="mi">120000</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span><span class="w">   </span><span class="sd">&quot;&quot;&quot;Mount your Google Drive at the specified mountpoint path.&quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">103</span>   <span class="k">return</span> <span class="n">_mount</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">104</span>       <span class="n">mountpoint</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">105</span>       <span class="n">force_remount</span><span class="o">=</span><span class="n">force_remount</span><span class="p">,</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/drive.py</span> in <span class="ni">_mount</span><span class="nt">(mountpoint, force_remount, timeout_ms, ephemeral, readonly)</span>
+<span class="g g-Whitespace">    </span><span class="mi">130</span>   <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">131</span>   <span class="k">if</span> <span class="n">ephemeral</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">132</span>     <span class="n">_message</span><span class="o">.</span><span class="n">blocking_request</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">133</span>         <span class="s1">&#39;request_auth&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;authType&#39;</span><span class="p">:</span> <span class="s1">&#39;dfs_ephemeral&#39;</span><span class="p">},</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">134</span>     <span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/_message.py</span> in <span class="ni">blocking_request</span><span class="nt">(request_type, request, timeout_sec, parent)</span>
+<span class="g g-Whitespace">    </span><span class="mi">174</span>       <span class="n">request_type</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">expect_reply</span><span class="o">=</span><span class="kc">True</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span>   <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">176</span>   <span class="k">return</span> <span class="n">read_reply_from_input</span><span class="p">(</span><span class="n">request_id</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">)</span>
+
+<span class="nn">/usr/local/lib/python3.10/dist-packages/google/colab/_message.py</span> in <span class="ni">read_reply_from_input</span><span class="nt">(message_id, timeout_sec)</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span>     <span class="n">reply</span> <span class="o">=</span> <span class="n">_read_next_input_message</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">95</span>     <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">_NOT_READY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">96</span>       <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>       <span class="k">continue</span>
+<span class="g g-Whitespace">     </span><span class="mi">98</span>     <span class="k">if</span> <span class="p">(</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple">
+<li><p>from google.colab import drive: Pernyataan ini mengimpor pustaka google.colab yang memungkinkan akses ke fungsi khusus Colab, termasuk kemampuan untuk menghubungkan dan menggunakan Google Drive.</p></li>
+<li><p>drive.mount(‘/content/drive’): Pernyataan ini memasang Google Drive Anda ke direktori ‘/content/drive’ di lingkungan Colab. Ini memerlukan otorisasi untuk mengakses Google Drive, dan Anda akan diminta untuk memasukkan kode otorisasi yang akan muncul. Setelah proses ini selesai, Anda dapat mengakses file yang ada di Google Drive Anda melalui direktori ‘/content/drive/MyDrive’.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;iris.csv&#39;</span><span class="p">)</span>
+<span class="n">X_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="p">[</span><span class="s1">&#39;variety&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple">
+<li><p>iris = pd.read_csv(‘iris.csv’): Kode ini menggunakan fungsi read_csv dari pandas untuk membaca file CSV dengan nama ‘iris.csv’. Data dari file CSV tersebut disimpan dalam DataFrame yang disebut iris. DataFrame ini akan berisi semua kolom dan baris dari file CSV.</p></li>
+<li><p>X_iris = iris.drop(‘variety’, axis=1): Kode ini menghasilkan DataFrame X_iris dengan menghapus kolom ‘variety’ dari DataFrame iris. axis=1 digunakan untuk menunjukkan bahwa kolom yang ingin dihapus, bukan baris. Dalam hal ini, X_iris akan berisi semua kolom kecuali kolom ‘variety’.</p></li>
+<li><p>y_iris = iris[‘variety’]: Kode ini menghasilkan Series y_iris yang berisi nilai dari kolom ‘variety’ dalam DataFrame iris. y_iris akan menjadi target variabel yang ingin diprediksi atau diestimasi.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>    <span class="c1"># 2. Instantiate the model with hyperparameters</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span>              <span class="c1"># 3. Fit to data. Notice y is not specified!</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>#sk-container-id-4 {color: black;background-color: white;}#sk-container-id-4 pre{padding: 0;}#sk-container-id-4 div.sk-toggleable {background-color: white;}#sk-container-id-4 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-4 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-4 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-4 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-4 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-4 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-4 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-4 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-4 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-4 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-4 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-4 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-4 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-4 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-4 div.sk-item {position: relative;z-index: 1;}#sk-container-id-4 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-4 div.sk-item::before, #sk-container-id-4 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-4 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-4 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-4 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-4 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-4 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-4 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-4 div.sk-label-container {text-align: center;}#sk-container-id-4 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-4 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-4" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>PCA(n_components=2)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" checked><label for="sk-estimator-id-4" class="sk-toggleable__label sk-toggleable__label-arrow">PCA</label><div class="sk-toggleable__content"><pre>PCA(n_components=2)</pre></div></div></div></div></div></div></div>
+</div>
+<ol class="arabic simple">
+<li><p>from sklearn.decomposition import PCA: Pernyataan ini mengimpor kelas PCA dari modul decomposition dalam pustaka scikit-learn. PCA (Principal Component Analysis) adalah teknik reduksi dimensi yang digunakan untuk mengubah dataset menjadi representasi yang lebih rendah dimensinya.</p></li>
+<li><p>model = PCA(n_components=2): Kode ini membuat objek model dari kelas PCA dengan mengatur n_components menjadi 2. Ini berarti kita ingin menghasilkan 2 komponen utama saat menggunakan PCA. Komponen utama ini akan digunakan untuk menggambarkan variasi dalam dataset dengan dimensi yang lebih rendah.</p></li>
+<li><p>model.fit(X_iris): Kode ini memanggil metode fit pada objek model dan memasukkan X_iris sebagai argumennya. Metode fit digunakan untuk mempelajari pola dalam data X_iris dan mengestimasi komponen utama. Dalam hal ini, kita mempelajari pola dalam dataset iris untuk mengidentifikasi komponen utama yang menjelaskan variasi dalam data.</p></li>
+</ol>
+<p>Perlu diperhatikan bahwa argumen y (variabel dependen) tidak dijelaskan dalam pemanggilan fit, karena PCA adalah metode unsupervised learning yang tidak memerlukan variabel dependen. PCA hanya menggunakan variabel independen (X_iris) untuk menghasilkan komponen utama.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;check number of components&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">n_components_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>check number of components 2
+</pre></div>
+</div>
+</div>
+</div>
+<p>code print(“check number of components”, model.n_components_) digunakan untuk mencetak jumlah komponen utama yang dihasilkan oleh model PCA. Properti n_components_ pada objek model PCA berisi jumlah komponen utama yang telah diestimasi berdasarkan data yang diberikan.</p>
+<div class="section" id="transform-the-data">
+<h2>Transform the data<a class="headerlink" href="#transform-the-data" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_2D</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span> <span class="c1"># 4. Transform the data to two dimenstions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>X_2D = model.transform(X_iris): Kode ini menggunakan metode transform pada objek model untuk mentransformasikan data X_iris menjadi representasi dua dimensi. Metode transform mengambil data X_iris sebagai argumennya dan menghasilkan representasi dua dimensi dari data tersebut.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;show first row of data&quot;</span><span class="p">,</span> <span class="n">X_2D</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>show first row of data [-2.68412563  0.31939725]
+</pre></div>
+</div>
+</div>
+</div>
+<p>code print(“show first row of data”, X_2D[0,:]) digunakan untuk mencetak baris pertama dari data yang telah di-transformasi menjadi dua dimensi menggunakan PCA.</p>
+<p>Dalam hal ini, X_2D adalah array dua dimensi yang berisi representasi dua dimensi dari data setelah dilakukan transformasi menggunakan model PCA. Dengan menggunakan indeks [0,:], kita memilih baris pertama dari array X_2D.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># transform each row of data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_iris</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[-2.68412563  0.31939725]]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.10/dist-packages/sklearn/base.py:439: UserWarning: X does not have valid feature names, but PCA was fitted with feature names
+  warnings.warn(
+</pre></div>
+</div>
+</div>
+</div>
+<p>Code print(model.transform(X_iris.iloc[0, :].to_numpy().reshape(1, -1))) digunakan untuk mentransformasi setiap baris data secara terpisah menggunakan model PCA dan mencetak hasil transformasi.</p>
+</div>
+<div class="section" id="insert-x-2d-into-the-original-iris-dataframe">
+<h2>Insert X_2D into the original Iris DataFrame<a class="headerlink" href="#insert-x-2d-into-the-original-iris-dataframe" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="p">[</span><span class="s1">&#39;PCA1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_2D</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">iris</span><span class="p">[</span><span class="s1">&#39;PCA2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_2D</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Code iris[‘PCA1’] = X_2D[:,0] dan iris[‘PCA2’] = X_2D[:,1] digunakan untuk menambahkan dua kolom baru ke dalam DataFrame iris yang merupakan hasil dari transformasi PCA.</p>
+<p>Dalam hal ini, X_2D adalah array dua dimensi yang berisi hasil transformasi PCA dari data. X_2D[:,0] dan X_2D[:,1] digunakan untuk memilih kolom pertama dan kedua dari array X_2D.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.FacetGrid at 0x7f0c6a3aa050&gt;
+</pre></div>
+</div>
+<img alt="_images/7581ecf56518fcf9df8bdc694da2955f89c04abb49b888d50b73f3091b227204.png" src="_images/7581ecf56518fcf9df8bdc694da2955f89c04abb49b888d50b73f3091b227204.png" />
+</div>
+</div>
+<p>Code diatas menggunakan fungsi lmplot dari pustaka seaborn untuk membuat scatter plot dari kolom ‘PCA1’ dan ‘PCA2’ dalam DataFrame iris, dengan pengelompokan berdasarkan kolom ‘variety’.</p>
+<p>Berikut adalah penjelasan untuk setiap argumen dalam fungsi lmplot:</p>
+<ol class="arabic simple">
+<li><p>x=”PCA1”: Menentukan kolom yang akan digunakan sebagai sumbu x dalam scatter plot.</p></li>
+<li><p>y=”PCA2”: Menentukan kolom yang akan digunakan sebagai sumbu y dalam scatter plot.</p></li>
+<li><p>hue=’variety’: Menentukan kolom yang akan digunakan untuk pengelompokan (hue) pada scatter plot, dalam hal ini kolom ‘variety’.</p></li>
+<li><p>data=iris: Menentukan DataFrame yang akan digunakan sebagai sumber data untuk scatter plot, dalam hal ini DataFrame iris.</p></li>
+<li><p>fit_reg=False: Menentukan apakah garis regresi akan ditampilkan atau tidak. Dalam hal ini, fit_reg diatur sebagai False, yang berarti tidak ada garis regresi yang ditampilkan.</p></li>
+<li><p>height=8: Menentukan tinggi (height) dari scatter plot dalam satuan yang ditentukan. Dalam hal ini, tinggi scatter plot diatur sebagai 8.</p></li>
+<li><p>scatter_kws={“s”: 150}: Menentukan parameter tambahan untuk scatter plot. Dalam hal ini, kita menggunakan scatter_kws untuk mengatur ukuran titik-titik pada scatter plot menjadi 150.</p></li>
+</ol>
+</div>
+<div class="section" id="change-number-of-components">
+<h2>Change number of components<a class="headerlink" href="#change-number-of-components" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>    <span class="c1"># 2. Instantiate the model with hyperparameters</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span>              <span class="c1"># 3. Fit to data. Notice y is not specified!</span>
+<span class="n">X_2D</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span> <span class="c1"># 4. Transform the data to two dimenstions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Code diatas menggunakan pustaka scikit-learn untuk menerapkan PCA (Principal Component Analysis) pada data iris. Berikut adalah penjelasan langkah-langkah dalam kode tersebut:</p>
+<ol class="arabic simple">
+<li><p>from sklearn.decomposition import PCA: Baris ini mengimport kelas PCA dari pustaka scikit-learn, yang digunakan untuk menerapkan analisis komponen utama (PCA).</p></li>
+<li><p>model = PCA(n_components=4): Pada langkah ini, objek model PCA dibuat dengan argumen n_components=4. Argumen ini menentukan jumlah komponen utama yang ingin dihasilkan dari PCA. Dalam kasus ini, Anda mengatur jumlah komponen utama menjadi 4.</p></li>
+<li><p>model.fit(X_iris): Langkah ini mengambil data X_iris dan menggunakan metode fit pada objek model untuk melatih model PCA. Dalam hal ini, model PCA akan mempelajari struktur data iris dan mengestimasi komponen utama berdasarkan data tersebut. Perlu diperhatikan bahwa argumen y tidak ditentukan dalam pemanggilan metode fit, yang berarti PCA dilakukan hanya pada fitur-fitur X_iris tanpa memperhatikan variabel target.</p></li>
+<li><p>X_2D = model.transform(X_iris): Pada langkah ini, metode transform pada objek model digunakan untuk mentransformasikan data X_iris menjadi representasi dua dimensi menggunakan komponen utama yang telah diestimasi sebelumnya. Representasi dua dimensi ini disimpan dalam variabel X_2D.</p></li>
+</ol>
+<p>Dengan menjalankan kode ini, kita dapat melatih model PCA dengan data X_iris dan menghasilkan representasi dua dimensi dari data tersebut menggunakan empat komponen utama. Representasi ini disimpan dalam variabel X_2D.</p>
+<p>ในกรณีนี้ไม่สามารถกำหนด n_components ให้มากกว่า 4 ได้ เนื่องจาก Iris dataset มีจำนวน feature จำนวนเพียง 4 ค่า</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>    <span class="c1"># 2. Instantiate the model with hyperparameters</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span>              <span class="c1"># 3. Fit to data. Notice y is not specified!</span>
+<span class="n">X_2D</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_iris</span><span class="p">)</span> <span class="c1"># 4. Transform the data to two dimenstions</span>
+
+<span class="n">iris</span><span class="p">[</span><span class="s1">&#39;PCA1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_2D</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">iris</span><span class="p">[</span><span class="s1">&#39;PCA2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_2D</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">iris</span><span class="p">[</span><span class="s1">&#39;PCA3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_2D</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Code diatas melakukan PCA pada data iris dengan menggunakan tiga komponen utama. Setelah melakukan transformasi PCA, hasil transformasi tersebut disimpan dalam tiga kolom baru ‘PCA1’, ‘PCA2’, dan ‘PCA3’ dalam DataFrame iris.</p>
+<p>Pada baris pertama, from sklearn.decomposition import PCA digunakan untuk mengimport kelas PCA dari pustaka scikit-learn.</p>
+<p>Selanjutnya, pada baris kedua, model = PCA(n_components=3) menginisialisasi objek model PCA dengan tiga komponen utama.</p>
+<p>Pada baris ketiga, model.fit(X_iris) dilakukan untuk melatih model PCA dengan data X_iris. Perlu diperhatikan bahwa argumen y tidak diberikan, sehingga model PCA akan melatih data hanya dengan fitur-fitur X_iris.</p>
+<p>Pada baris keempat, X_2D = model.transform(X_iris) digunakan untuk mentransformasikan data X_iris menjadi representasi tiga dimensi menggunakan tiga komponen utama yang telah diestimasi sebelumnya.</p>
+<p>Terakhir, pada baris-baris kelima hingga ketujuh, kolom-kolom baru ‘PCA1’, ‘PCA2’, dan ‘PCA3’ ditambahkan ke DataFrame iris dengan menggunakan hasil transformasi X_2D yang sesuai dengan komponen utama yang dipilih.</p>
+<p>Dengan menjalankan code ini, kita akan mendapatkan DataFrame iris yang telah ditambahkan dengan tiga kolom baru ‘PCA1’, ‘PCA2’, dan ‘PCA3’ yang mewakili hasil transformasi PCA dari data iris.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#melihat beberapa baris pertama dari DataFrame iris setelah penambahan kolom PCA</span>
+<span class="n">iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-a95e4804-bf4d-4b3e-866b-402968658f09">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal.length</th>
+      <th>sepal.width</th>
+      <th>petal.length</th>
+      <th>petal.width</th>
+      <th>variety</th>
+      <th>PCA1</th>
+      <th>PCA2</th>
+      <th>PCA3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.684126</td>
+      <td>0.319397</td>
+      <td>-0.027915</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.714142</td>
+      <td>-0.177001</td>
+      <td>-0.210464</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.888991</td>
+      <td>-0.144949</td>
+      <td>0.017900</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.745343</td>
+      <td>-0.318299</td>
+      <td>0.031559</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.728717</td>
+      <td>0.326755</td>
+      <td>0.090079</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-a95e4804-bf4d-4b3e-866b-402968658f09')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-a95e4804-bf4d-4b3e-866b-402968658f09 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-a95e4804-bf4d-4b3e-866b-402968658f09');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">});</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA3&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">});</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;PCA3&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">fit_reg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="mi">150</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/cab0102c4625fb30f04ce6578d14d456af67ad991f8dcbb07116fbd6903454fc.png" src="_images/cab0102c4625fb30f04ce6578d14d456af67ad991f8dcbb07116fbd6903454fc.png" />
+<img alt="_images/40cab9d3715cbd955b1fae8cb5e0afc283019ae2699bd27e2900ceed3e46a23f.png" src="_images/40cab9d3715cbd955b1fae8cb5e0afc283019ae2699bd27e2900ceed3e46a23f.png" />
+<img alt="_images/ba0740989c6cec8e47619fb0ddc485bf7829f0691dbebd0c98c228a8d7f808d3.png" src="_images/ba0740989c6cec8e47619fb0ddc485bf7829f0691dbebd0c98c228a8d7f808d3.png" />
+</div>
+</div>
+<p>Code diatas menggunakan fungsi lmplot dari pustaka seaborn untuk membuat scatter plot dari kombinasi kolom PCA yang berbeda dalam DataFrame iris, dengan pengelompokan berdasarkan kolom ‘variety’.</p>
+<p>Pada baris pertama, sns.lmplot digunakan untuk membuat scatter plot dari kolom ‘PCA1’ dan ‘PCA2’, dengan pengelompokan berdasarkan kolom ‘variety’. Argumen x dan y digunakan untuk menentukan kolom yang akan digunakan sebagai sumbu x dan y. hue=’variety’ menentukan kolom yang akan digunakan untuk pengelompokan. data=iris menunjukkan bahwa data yang digunakan berasal dari DataFrame iris. fit_reg=False digunakan untuk menonaktifkan garis regresi. height=7 mengatur tinggi (height) dari scatter plot menjadi 7. scatter_kws={“s”: 150} digunakan untuk mengatur ukuran titik-titik pada scatter plot menjadi 150.</p>
+<p>Baris kedua dan ketiga memiliki struktur yang serupa, tetapi menggunakan kombinasi kolom PCA yang berbeda. Baris kedua membuat scatter plot dari kolom ‘PCA1’ dan ‘PCA3’, sedangkan baris ketiga membuat scatter plot dari kolom ‘PCA2’ dan ‘PCA3’.</p>
+<p>Dengan menjalankan code ini, Kita akan menghasilkan tiga scatter plot yang menampilkan hubungan antara kombinasi kolom PCA dalam DataFrame iris. Setiap scatter plot akan memperlihatkan pengelompokan berdasarkan kolom ‘variety’, dengan warna yang berbeda untuk setiap jenis variety.</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="training-new-features-using-naive-bayes">
+<h1>Training new features using Naive Bayes<a class="headerlink" href="#training-new-features-using-naive-bayes" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-83925b91-eec3-4472-abe7-3d57c3468877">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal.length</th>
+      <th>sepal.width</th>
+      <th>petal.length</th>
+      <th>petal.width</th>
+      <th>variety</th>
+      <th>PCA1</th>
+      <th>PCA2</th>
+      <th>PCA3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.684126</td>
+      <td>0.319397</td>
+      <td>-0.027915</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.714142</td>
+      <td>-0.177001</td>
+      <td>-0.210464</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.888991</td>
+      <td>-0.144949</td>
+      <td>0.017900</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.745343</td>
+      <td>-0.318299</td>
+      <td>0.031559</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>Setosa</td>
+      <td>-2.728717</td>
+      <td>0.326755</td>
+      <td>0.090079</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-83925b91-eec3-4472-abe7-3d57c3468877')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-83925b91-eec3-4472-abe7-3d57c3468877 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-83925b91-eec3-4472-abe7-3d57c3468877');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variety&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_iris</span> <span class="o">=</span> <span class="n">iris</span><span class="p">[</span><span class="s1">&#39;variety&#39;</span><span class="p">]</span>
+
+<span class="n">Xtrain</span><span class="p">,</span> <span class="n">Xtest</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">,</span> <span class="n">ytest</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_iris</span><span class="p">,</span> <span class="n">y_iris</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>CPada code diatas, train_test_split dari pustaka scikit-learn digunakan untuk membagi data X_iris dan y_iris menjadi data latih (Xtrain dan ytrain) serta data uji (Xtest dan ytest).</p>
+<p>Pada baris pertama, X_iris diinisialisasi dengan menghapus kolom ‘variety’ dari DataFrame iris menggunakan metode drop dengan argumen axis=1. Ini akan menghasilkan DataFrame yang hanya berisi fitur-fitur dari data iris.</p>
+<p>Pada baris kedua, y_iris diinisialisasi dengan kolom ‘variety’ dari DataFrame iris. Ini akan menghasilkan Series yang berisi label atau target dari data iris.</p>
+<p>Pada baris ketiga, train_test_split digunakan untuk membagi data X_iris dan y_iris menjadi data latih dan data uji. Argumen X_iris dan y_iris adalah data yang akan dibagi. random_state=1 digunakan untuk mengatur seed yang digunakan dalam proses pemilihan data secara acak, sehingga pemisahan data akan bersifat deterministik.</p>
+<p>Hasil dari pemisahan data akan disimpan dalam variabel Xtrain, Xtest, ytrain, dan ytest, yang akan digunakan dalam langkah-langkah selanjutnya dalam pemodelan atau evaluasi model machine learning.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Untuk melihat beberapa baris pertama dari data latih (Xtrain)</span>
+<span class="n">Xtrain</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>PCA1</th>
+      <th>PCA2</th>
+      <th>PCA3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>54</th>
+      <td>6.5</td>
+      <td>2.8</td>
+      <td>4.6</td>
+      <td>1.5</td>
+      <td>1.088103</td>
+      <td>0.074591</td>
+      <td>-0.307758</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>6.7</td>
+      <td>2.5</td>
+      <td>5.8</td>
+      <td>1.8</td>
+      <td>2.321229</td>
+      <td>-0.243832</td>
+      <td>-0.348304</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>6.8</td>
+      <td>3.0</td>
+      <td>5.5</td>
+      <td>2.1</td>
+      <td>2.165592</td>
+      <td>0.216276</td>
+      <td>0.033327</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.3</td>
+      <td>-2.648297</td>
+      <td>0.311849</td>
+      <td>0.026668</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>6.0</td>
+      <td>2.2</td>
+      <td>5.0</td>
+      <td>1.5</td>
+      <td>1.300792</td>
+      <td>-0.761150</td>
+      <td>-0.344995</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Untuk melihat beberapa baris pertama dari data latih (ytrain)</span>
+<span class="n">ytrain</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>54     Versicolor
+108     Virginica
+112     Virginica
+17         Setosa
+119     Virginica
+Name: variety, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Xtrain</span> <span class="o">=</span> <span class="n">Xtrain</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;PCA1&#39;</span><span class="p">,</span><span class="s1">&#39;PCA2&#39;</span><span class="p">,</span><span class="s1">&#39;PCA3&#39;</span><span class="p">]]</span>
+
+<span class="n">Xtrain</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-bb6d5ece-0a5a-47af-b9e2-c921c98ec3c9">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PCA1</th>
+      <th>PCA2</th>
+      <th>PCA3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>54</th>
+      <td>1.088103</td>
+      <td>0.074591</td>
+      <td>-0.307758</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>2.321229</td>
+      <td>-0.243832</td>
+      <td>-0.348304</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>2.165592</td>
+      <td>0.216276</td>
+      <td>0.033327</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>-2.648297</td>
+      <td>0.311849</td>
+      <td>0.026668</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>1.300792</td>
+      <td>-0.761150</td>
+      <td>-0.344995</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-bb6d5ece-0a5a-47af-b9e2-c921c98ec3c9')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-bb6d5ece-0a5a-47af-b9e2-c921c98ec3c9 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-bb6d5ece-0a5a-47af-b9e2-c921c98ec3c9');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<p>Setelah melakukan pemilihan kolom pada DataFrame Xtrain menggunakan metode loc dengan argumen [:, [‘PCA1’, ‘PCA2’, ‘PCA3’]], Kita dapat menggunakan metode head() untuk melihat beberapa baris pertama dari DataFrame Xtrain yang telah mengandung kolom-kolom yang dipilih.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Xtest</span> <span class="o">=</span> <span class="n">Xtest</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;PCA1&#39;</span><span class="p">,</span><span class="s1">&#39;PCA2&#39;</span><span class="p">,</span><span class="s1">&#39;PCA3&#39;</span><span class="p">]]</span>
+
+<span class="n">Xtest</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-08df76dd-5d97-402e-b5de-680c965840cf">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PCA1</th>
+      <th>PCA2</th>
+      <th>PCA3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>14</th>
+      <td>-2.644750</td>
+      <td>1.178765</td>
+      <td>-0.151628</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>-0.906470</td>
+      <td>-0.756093</td>
+      <td>-0.012600</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>0.900174</td>
+      <td>0.328504</td>
+      <td>-0.316209</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>-2.623528</td>
+      <td>0.810680</td>
+      <td>0.138183</td>
+    </tr>
+    <tr>
+      <th>131</th>
+      <td>3.230674</td>
+      <td>1.374165</td>
+      <td>-0.114548</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-08df76dd-5d97-402e-b5de-680c965840cf')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-08df76dd-5d97-402e-b5de-680c965840cf button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-08df76dd-5d97-402e-b5de-680c965840cf');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  </div></div>
+</div>
+<p>Setelah melakukan pemilihan kolom pada DataFrame Xtest menggunakan metode loc dengan argumen [:, [‘PCA1’, ‘PCA2’, ‘PCA3’]], Kita dapat menggunakan metode head() untuk melihat beberapa baris pertama dari DataFrame Xtrain yang telah mengandung kolom-kolom yang dipilih.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span> <span class="c1"># 1. choose model class</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>                       <span class="c1"># 2. instantiate model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">)</span>                  <span class="c1"># 3. fit model to data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>#sk-container-id-5 {color: black;background-color: white;}#sk-container-id-5 pre{padding: 0;}#sk-container-id-5 div.sk-toggleable {background-color: white;}#sk-container-id-5 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-5 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-5 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-5 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-5 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-5 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-5 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-5 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-5 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-5 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-5 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-5 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-5 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-5 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-5 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-5 div.sk-item {position: relative;z-index: 1;}#sk-container-id-5 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-5 div.sk-item::before, #sk-container-id-5 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-5 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-5 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-5 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-5 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-5 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-5 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-5 div.sk-label-container {text-align: center;}#sk-container-id-5 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-5 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-5" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GaussianNB()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-5" type="checkbox" checked><label for="sk-estimator-id-5" class="sk-toggleable__label sk-toggleable__label-arrow">GaussianNB</label><div class="sk-toggleable__content"><pre>GaussianNB()</pre></div></div></div></div></div></div></div>
+</div>
+<p>Pada code diatas menggunakan algoritma Naive Bayes dengan menggunakan kelas GaussianNB dari pustaka scikit-learn.</p>
+<p>Pada baris pertama, GaussianNB diimpor dari modul sklearn.naive_bayes. Ini adalah kelas yang mewakili model Naive Bayes dengan distribusi Gaussian.</p>
+<p>Pada baris kedua, model Naive Bayes dengan distribusi Gaussian diinstansiasi menggunakan GaussianNB(). Anda dapat menggunakan parameter default untuk model ini atau menyesuaikan parameter sesuai kebutuhan.</p>
+<p>Pada baris ketiga, model tersebut dilatih dengan memanggil metode fit(Xtrain, ytrain) pada model. Ini akan melakukan pelatihan model menggunakan data latih Xtrain dan ytrain. Model akan belajar untuk menyesuaikan diri dengan pola yang ada dalam data untuk melakukan klasifikasi.</p>
+<p>Setelah langkah ini, model Naive Bayes dengan distribusi Gaussian telah dipelajari dari data latih dan siap digunakan untuk melakukan prediksi pada data uji atau data baru.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pada diatas menggunakan model Naive Bayes yang telah dilatih (model) untuk melakukan prediksi pada data uji (Xtest), dan hasil prediksinya disimpan dalam variabel y_model.</p>
+<p>Untuk melakukan prediksi, Anda menggunakan metode predict(Xtest) pada model. Metode ini akan memprediksi label atau kelas untuk setiap sampel dalam Xtest berdasarkan pembelajaran yang dilakukan pada data latih. Hasil prediksi akan menjadi array yang berisi label prediksi untuk setiap sampel dalam Xtest.</p>
+<p>Setelah kode tersebut dieksekusi, variabel y_model akan berisi prediksi yang dihasilkan oleh model Naive Bayes untuk data uji Xtest.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="n">accuracy_score</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">y_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9473684210526315
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pada diatas menggunakan fungsi accuracy_score dari modul sklearn.metrics untuk menghitung akurasi prediksi model Naive Bayes.</p>
+<p>Fungsi accuracy_score digunakan untuk mengukur akurasi atau tingkat keakuratan prediksi. Anda perlu menyediakan dua argumen: ytest, yaitu label sebenarnya dari data uji, dan y_model, yaitu label yang diprediksi oleh model untuk data uji.</p>
+<p>Dengan memanggil accuracy_score(ytest, y_model), fungsi akan membandingkan label sebenarnya (ytest) dengan label yang diprediksi oleh model (y_model) dan menghitung persentase keakuratan prediksi.</p>
+<p>Hasilnya adalah nilai akurasi, yang merupakan proporsi dari sampel-sampel dalam data uji yang diprediksi dengan benar oleh model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="n">mat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">ytest</span><span class="p">,</span> <span class="n">y_model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Pada code diatas menggunakan fungsi confusion_matrix dari modul sklearn.metrics untuk menghitung matriks konfusi antara label sebenarnya (ytest) dan label yang diprediksi oleh model (y_model).</p>
+<p>Matriks konfusi adalah tabel persegi yang digunakan untuk menggambarkan performa model klasifikasi. Pada sumbu horizontal matriks konfusi, kita memiliki label yang diprediksi oleh model, sedangkan pada sumbu vertikal, kita memiliki label sebenarnya. Setiap sel dalam matriks konfusi menunjukkan jumlah sampel yang diprediksi dengan suatu label tertentu (baris) oleh model, sedangkan label sebenarnya adalah label lainnya (kolom).</p>
+<p>Dengan memanggil confusion_matrix(ytest, y_model), fungsi akan menghitung matriks konfusi berdasarkan label sebenarnya (ytest) dan label yang diprediksi oleh model (y_model).</p>
+<p>Hasilnya adalah matriks konfusi yang berbentuk array, di mana setiap elemen mewakili jumlah sampel yang termasuk dalam kategori tertentu berdasarkan prediksi model dan label sebenarnya.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+            <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;setosa&#39;</span><span class="p">,</span> <span class="s1">&#39;versicolor&#39;</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">],</span> <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;setosa&#39;</span><span class="p">,</span> <span class="s1">&#39;versicolor&#39;</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Confusion matrix&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;true label&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;predicted label&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/1193dd6de7f65bd0d1a861d21a1f2b3ff4459d182ca3ce68b43a63bdaea1930d.png" src="_images/1193dd6de7f65bd0d1a861d21a1f2b3ff4459d182ca3ce68b43a63bdaea1930d.png" />
+</div>
+</div>
+<p>Pada code diatas menggunakan modul matplotlib.pyplot untuk membuat visualisasi matriks konfusi dalam bentuk heatmap.</p>
+<p>Pertama, sns.heatmap(mat.T, square=True, annot=True, fmt=’d’, cbar=False, cmap=’viridis’, xticklabels=[‘setosa’, ‘versicolor’, ‘virginica’], yticklabels=[‘setosa’, ‘versicolor’, ‘virginica’]) digunakan untuk membuat heatmap matriks konfusi. Fungsi heatmap dari modul seaborn digunakan untuk membuat visualisasi heatmap berdasarkan matriks konfusi mat. Argumen mat.T digunakan untuk mentranspose matriks konfusi agar sumbu x dan y sesuai dengan label yang dimaksud. Argumen square=True digunakan untuk membuat kotak persegi pada heatmap. Argumen annot=True digunakan untuk menampilkan angka pada setiap sel heatmap. Argumen fmt=’d’ digunakan untuk menampilkan angka dalam format bilangan bulat. Argumen cbar=False digunakan untuk menghilangkan color bar pada heatmap. Argumen cmap=’viridis’ digunakan untuk menentukan skema warna heatmap. Argumen xticklabels=[‘setosa’, ‘versicolor’, ‘virginica’] dan yticklabels=[‘setosa’, ‘versicolor’, ‘virginica’] digunakan untuk menentukan label pada sumbu x dan y.</p>
+<p>Selanjutnya, plt.title(‘Confusion matrix’) digunakan untuk memberikan judul pada plot. plt.xlabel(‘true label’) digunakan untuk memberikan label pada sumbu x. plt.ylabel(‘predicted label’) digunakan untuk memberikan label pada sumbu y. plt.show() digunakan untuk menampilkan plot heatmap.</p>
+<p>Dengan kode tersebut, Anda akan mendapatkan visualisasi heatmap matriks konfusi yang memberikan informasi tentang klasifikasi yang dilakukan oleh model Naive Bayes.</p>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="jaringansaraf.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><strong>JARINGAN SYARAF TIRUAN</strong></p>
+      </div>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Principal Component Analysis: PCA</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transform-the-data">Transform the data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insert-x-2d-into-the-original-iris-dataframe">Insert X_2D into the original Iris DataFrame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-number-of-components">Change number of components</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#training-new-features-using-naive-bayes">Training new features using Naive Bayes</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Walid Rijal Awali
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
